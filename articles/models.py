@@ -30,6 +30,7 @@ class Monster(models.Model):
 class Observation(models.Model):
     monster = models.ForeignKey(Monster, on_delete=models.CASCADE, related_name='observations')
     title= models.CharField(max_length=200)
+    slug= models.SlugField(max_length=200, unique=True)
     observer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='observations')
     observation_date = models.DateField()
     location= models.CharField(max_length=255)
