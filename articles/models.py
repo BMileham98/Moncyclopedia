@@ -10,6 +10,7 @@ class Monster(models.Model):
     """
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
+    etymology = models.CharField(max_length=500)
     founder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='monsters')
     category = models.CharField(max_length=50)
     observed_size= models.TextField()
