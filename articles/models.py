@@ -56,7 +56,7 @@ class Observation(models.Model):
     location= models.CharField(max_length=255)
     observed_behaviour= models.TextField()
     danger_rating= models.IntegerField(choices=DANGER_CHOICES)
-    expanded_danger_rating= models.CharField(max_length=50)
+    expanded_danger_rating= models.TextField()
     additional_notes = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     image = CloudinaryField('image', blank=True, null=True)
