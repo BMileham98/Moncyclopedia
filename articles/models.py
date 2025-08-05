@@ -8,11 +8,21 @@ class Monster(models.Model):
     """
     Model represents each monster to be listed and discussed
     """
+    CATEGORY_CHOICES = [
+        ('Chaos', 'Chaos'),
+        ('Holy', 'Holy'),
+        ('Marine', 'Marine'),
+        ('Nature', 'Nature'),
+        ('Aeries', 'Aeries'),
+        ('Pyro', 'Pyro'),
+        ('Twilight', 'Twilight'),
+    ]
+
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     etymology = models.CharField(max_length=500)
     founder = models.ForeignKey(User, on_delete=models.CASCADE, related_name='monsters')
-    category = models.CharField(max_length=50)
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
     observed_size= models.TextField()
     description = models.TextField()
     observed_diet = models.TextField()
@@ -29,6 +39,15 @@ class Monster(models.Model):
         return self.name    
 
 class Observation(models.Model):
+
+    DANGER_CHOICES = [
+        (1, '1 - Harmless'),
+        (2, '2 - Low Risk'), 
+        (3, '3 - Moderate'),
+        (4, '4 - High Risk'),
+        (5, '5 - Extremely Dangerous'),
+    ]
+
     monster = models.ForeignKey(Monster, on_delete=models.CASCADE, related_name='observations')
     title= models.CharField(max_length=200)
     slug= models.SlugField(max_length=200, unique=True)
@@ -36,7 +55,8 @@ class Observation(models.Model):
     observation_date = models.DateField()
     location= models.CharField(max_length=255)
     observed_behaviour= models.TextField()
-    danger_rating= models.CharField(max_length=50)
+    danger_rating= models.IntegerField(choices=DANGER_CHOICES)
+    expanded_danger_rating= models.CharField(max_length=50)
     additional_notes = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     image = CloudinaryField('image', blank=True, null=True)
