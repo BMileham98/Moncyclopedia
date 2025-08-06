@@ -11,6 +11,16 @@ def index(request):
     if monsters:
         today= date.today()
         #determining featured monster by element per weekday
+        weekday_names = {
+            0: 'Monday',
+            1: 'Tuesday',
+            2: 'Wednesday',
+            3: 'Thursday',
+            4: 'Friday',
+            5: 'Saturday',
+            6: 'Sunday',
+        }
+        
         element_schedule = {
             0: 'Chaos',
             1: 'Holy',
@@ -22,6 +32,7 @@ def index(request):
         }
         weekday = today.weekday()
         today_element= element_schedule[weekday]
+        today_weekday= weekday_names[weekday]
         #sort monsters by element/category
         element_monsters = monsters.filter(category=today_element)
         if element_monsters:
@@ -38,6 +49,7 @@ def index(request):
     return render(request, 'index.html', {
         'featured_monster': featured_monster,
         'featured_element': featured_element,
+        'day_name': today_weekday,
     })
 
 

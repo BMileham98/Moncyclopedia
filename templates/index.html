@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Moncyclopedia{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-dark p-5 rounded-lg mb-4">
+    <h1 class="display-4">Welcome to the Moncyclopedia!</h1>
+    <p class="lead">The number one place for monster enthusiasts to share their experiences and learn more!</p>
+</div>
+
+{% if featured_monster %}
+<div class="card">
+    <div class="card-header bg-{{ featured_monster.category|lower }}">
+        <h2>Today is {{ day_name }}! Featured Monster of the Day is:</h2>
+    </div>
+    <div class="card-body bg-dark">
+        <h3>{{ featured_monster.name }}</h3>
+        <p><strong>Category:</strong> {{ featured_monster.category }}</p>
+        <p>{{ featured_monster.description|truncatewords:50 }}</p>
+        <a href="{% url 'articles:monster_detail' featured_monster.pk %}" class="btn bg-{{ featured_monster.category|lower }}">Find out more!</a>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

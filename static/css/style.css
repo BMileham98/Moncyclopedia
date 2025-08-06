@@ -1,0 +1,38 @@
+:root {
+    --chaos-color: midnightblue;
+    --holy-color: gold;
+    --marine-color: turquoise;
+    --nature-color: springgreen;
+    --aeries-color: skyblue;
+    --pyro-color: red;
+    --twilight-color: rebeccapurple;
+}
+
+
+.navbar-color {
+    background-color: #6b0db7;
+}
+
+.navbar-color .nav-link {
+    color: #ffffff !important;
+    padding: 0.5rem 1rem;
+}
+
+.navbar-color .nav-link:hover {
+    color: #e0d4f7 !important; /* Light purple on hover */
+}
+
+/* Elemental backgrounds */
+.bg-chaos {background-color: var(--chaos-color);}
+
+.bg-holy {background-color: var(--holy-color);}
+
+.bg-marine {background-color: var(--marine-color);}
+
+.bg-nature {background-color: var(--nature-color);}
+
+.bg-aeries {background-color: var(--aeries-color);}
+
+.bg-pyro {background-color: var(--pyro-color);}
+
+.bg-twilight {background-color: var(--twilight-color);}
