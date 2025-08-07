@@ -1,6 +1,9 @@
-from django.shortcuts import render, get_object_or_404 #throw an error for user if request isn't valid
+from django.shortcuts import render, get_object_or_404, redirect #throw an error for user if request isn't valid
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .models import Monster, Observation, Comment
+from .forms import CommentForm
 from datetime import date
 
 # Create your views here.
@@ -55,21 +58,36 @@ def index(request):
 
 # view for masterlist of monsters catalogued
 def monster_list(request):
-    monsters = Monster.objects.all()
-    return render(request, 'monster_list.html', {'monsters': monsters})
+    monsters = Monster.objects.all().order_by('name')
+    return render(request, 'articles/monster_list.html', {'monsters': monsters})
 
 #view for each individual monster with list of related observations
 def monster_detail(request, pk):
     monster = get_object_or_404(Monster, pk=pk)
     observations = monster.observations.all()
-    return render(request, 'monster_detail.html', {'monster': monster, 'observations': observations})
+    comments= monster.comments.all().order_by('-created_on')
+    other_monsters= Monster.objects.exclude(pk=pk).order_by('name')
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.monster = monster
+            comment.user = request.user
+            comment.save()
+            messages.success(request, 'Comment added!')
+            return redirect('articles:monster_detail', pk=pk)
+    else:
+        form = CommentForm()
+    return render(request, 'articles/monster_detail.html', {'monster': monster, 'observations': observations, 'comments': comments, 'other_monsters': other_monsters, 'form': form})
 
 #view for masterlist of observations by users
 def observation_list(request):
     observations = Observation.objects.all()
-    return render(request, 'observation_list.html', {'observations': observations})
+    return render(request, 'articles/observation_list.html', {'observations': observations})
 
 #view for each individual observation
 def observation_detail(request, slug):
     observation = get_object_or_404(Observation, slug=slug)
-    return render(request, 'observation_detail.html', {'observation': observation})
+    comments = observation.comments.all().order_by('-created_on')
+    return render(request, 'articles/observation_detail.html', {'observation': observation, 'comments': comments})

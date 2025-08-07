@@ -68,7 +68,8 @@ class Observation(models.Model):
         return f"Observation of {self.monster.name} by {self.observer.username}"
 
 class Comment(models.Model):
-    observation = models.ForeignKey(Observation, on_delete=models.CASCADE, related_name='comments')
+    observation = models.ForeignKey(Observation, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
+    monster= models.ForeignKey(Monster, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
     content = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
@@ -78,4 +79,8 @@ class Comment(models.Model):
         ordering = ['-created_on']
 
     def __str__(self):
-        return f"Comment by {self.user.username} on {self.observation.title}"
+        if self.observation:
+            return f"Comment by {self.user.username} on {self.observation.title}"
+        elif self.monster:
+            return f"Comment by {self.user.username} on {self.monster.name}"
+        return f"Comment by {self.user.username}"

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+
+{% block title %}{{ monster.name }} - Moncyclopedia{% endblock %}
+
+{% block content %}
+<div class= "row">
+    <div class= "col-md-8">
+        <div class="justify-content-between align-items-center mb-3">
+            <h1>{{ monster.name }}</h1>
+            <span class="badge bg-{{ monster.category|lower }}">{{ monster.category }}</span>
+        </div>
+
+        {% if monster.image %}
+        <img src="{{ monster.image.url }}" alt="{{ monster.name }}" class="img-fluid mb-3">
+        {% else %}
+        <p>No image available.</p>
+        {% endif %}
+
+        <div class="card mb-4">
+            <div class="card-header bg-{{ monster.category|lower }}">
+                <h2>About {{ monster.name }}</h2>
+            </div>
+            <div class="card-body bg-dark">
+                <div class= "row">
+                    <div class="col-md-6">
+                        <p><strong>Etymology:</strong> {{ monster.etymology }}</p>
+                        <p><strong>Added by:</strong> {{ monster.founder }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Habitat:</strong> {{ monster.habitat }}</p>
+                        <p><strong>Observed Size:</strong> {{ monster.observed_size }}</p>
+                        <p><strong>Diet:</strong> {{ monster.observed_diet }}</p>
+                    </div>
+                </div>
+                <p><strong>Description:</strong></p>
+                <p>{{ monster.description|linebreaks }}</p>
+                <p><strong>Signature Skill:</strong></p>
+                <p>{{ monster.signature_skill }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header bg-dark">
+                <h2>Observations</h2>
+            </div>
+            <div class="card-body bg-dark">
+                {% if observations %}
+                <p>{{ monster.name }} has {{ observations.count }} observations.</p>
+                <ul class="list-unstyled">
+                    {% for observation in observations %}
+                    <li>
+                        <a href="{% url 'articles:observation_detail' observation.slug %}">{{ observation.title }} by {{ observation.observer.username }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No observations recorded for this monster yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header bg-dark">
+                <h3>Comments: {{comments.count}}</h3>
+            </div>
+            <div class="card-body bg-dark">
+                {% if comments %}
+                    <ul class="list-unstyled">
+                        {% for comment in comments %}
+                            <li class="mb-3">
+                                <strong>{{ comment.user.username }}</strong> ({{ comment.created_on|date:"F j, Y, g:i a" }}):
+                                <p>{{ comment.content }}</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No comments yet. Be the first to comment!</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header bg-dark">
+                <h4>Leave a comment!</h4>
+            </div>
+            <div class="card-body bg-dark">
+                {% if user.is_authenticated %}
+                    {% load crispy_forms_tags %}
+                    <form id="commentForm" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                {% else %}
+                    <p>Please log in to join the discussion!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-{{ monster.category|lower }}">
+                <h2>You are currently viewing: {{ monster.name }}</h2>
+            </div>
+            <div class="card-body bg-dark">
+                <p><strong>Category:</strong> {{ monster.category }}</p>
+                <p><strong>Discovered by:</strong> {{ monster.founder }}</p>
+                <p><strong>Observations:</strong> {{ monster.observations.count }}</p>
+                <p><strong>Comments:</strong> {{ comments.count }}</p>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header bg-dark">
+                <h2>Other Monsters</h2>
+            </div>
+            <div class="card-body bg-dark">
+                {% if other_monsters %}
+                    <ul class="list-unstyled">
+                        {% for other_monster in other_monsters %}
+                        <li>
+                            <a href="{% url 'articles:monster_detail' other_monster.pk %}">{{ other_monster.name }}</a>
+                             <span class="badge bg-{{ other_monster.category|lower }}">{{ other_monster.category }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No other monsters found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

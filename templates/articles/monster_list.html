@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Monster List{% endblock %}
+
+{% block content %}
+<h1>List of Monsters</h1>
+<ul class="list-unstyled">  
+    {% for monster in monsters %}
+    <li class= "mb-2">
+        <a href="{% url 'articles:monster_detail' monster.pk %}">{{ monster.name }}</a>
+        <span class="badge bg-{{ monster.category|lower }}">{{ monster.category }}</span>
+    </li>
+    {% empty %}
+    <li>No monsters catalogued yet.</li>
+    {% endfor %}
+</ul>
+{% endblock %}
