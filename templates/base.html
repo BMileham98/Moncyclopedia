@@ -17,6 +17,15 @@
                 <a class="nav-link" href="{% url 'articles:monster_list' %}">Monsters</a>
                 <a class="nav-link" href="{% url 'articles:observation_list' %}">Observations</a>
             </div>
+            <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <span class="nav-link">Welcome, {{ user.username }}!</span>
+                    <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
+                {% else %}
+                    <a class="nav-link" href="{% url 'account_login' %}">Login</a>
+                    <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 

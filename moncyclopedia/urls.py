@@ -20,6 +20,7 @@ from articles import views as mon_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),  # For user authentication
     path('summernote/', include('django_summernote.urls')),
     path('', mon_views.index, name='index'),
     path('', include('articles.urls')),  # Articles URLs

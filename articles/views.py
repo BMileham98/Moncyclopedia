@@ -83,11 +83,25 @@ def monster_detail(request, pk):
 
 #view for masterlist of observations by users
 def observation_list(request):
-    observations = Observation.objects.all()
-    return render(request, 'articles/observation_list.html', {'observations': observations})
+    monsters_with_observations= Monster.objects.filter(observations__isnull=False).distinct().order_by('name')
+    return render(request, 'articles/observation_list.html', {'monsters_with_observations': monsters_with_observations})
 
 #view for each individual observation
 def observation_detail(request, slug):
     observation = get_object_or_404(Observation, slug=slug)
     comments = observation.comments.all().order_by('-created_on')
-    return render(request, 'articles/observation_detail.html', {'observation': observation, 'comments': comments})
+    all_observations= Observation.objects.all().order_by('monster__name', 'observation_date')
+
+    if request.method == 'POST' and request.user.is_authenticated:
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.observation = observation
+            comment.user = request.user
+            comment.save()
+            messages.success(request, 'Comment added!')
+            return redirect('articles:observation_detail', slug=slug)
+    else:
+        form = CommentForm()
+
+    return render(request, 'articles/observation_detail.html', {'observation': observation, 'comments': comments, 'all_observations': all_observations, 'form': form,})

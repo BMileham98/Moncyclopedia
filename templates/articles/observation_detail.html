@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}{{ observation.title }} - Moncyclopedia{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="d-flex align-items-center mb-3">
+            <h1>{{ observation.title }}</h1>
+            <span class="badge bg-secondary ms-2">{{ observation.observer.username }}</span>
+            <p>Created on: {{ observation.created_on|date:"F j, Y" }}</p>
+        </div>
+        {% if observation.image %}
+            <img src="{{ observation.image.url }}" alt="{{ observation.title }}" class="img-fluid mb-3">
+        {% else %}
+            <p>No image available for this observation.</p>
+        {% endif %}
+        <div class="card mb-4">
+            <div class="card-header bg-dark">
+                <h2>Observation Details</h2>
+            </div>
+            <div class="card-body bg-dark">
+                <p><strong>Monster:</strong> <a href="{% url 'articles:monster_detail' observation.monster.pk %}">{{ observation.monster.name }}</a></p>
+                <p><strong>Date:</strong> {{ observation.observation_date|date:"F j, Y" }}</p>
+                <p><strong>Location:</strong> {{ observation.location }}</p>
+                <p><strong>Danger Rating</strong> {{observation.danger_rating }}</p>
+            </div>
+        </div>
+        <h2>Observed Behaviour</h2>
+        <p>{{ observation.observed_behaviour }}</p>
+        <h2>Additional Notes</h2>
+        <p>{{ observation.notes }}</p>
+        <h3>Danger Evaluation</h3>
+        <p><strong>{{ observation.danger_evaluation }}:</strong> {{ observation.expanded_danger_rating }}</p>
+        <div class="card mt-4">
+                <div class="card-header bg-dark">
+                    <h3>Comments: {{comments.count}}</h3>
+                </div>
+                <div class="card-body bg-dark">
+                    {% if comments %}
+                        <ul class="list-unstyled">
+                            {% for comment in comments %}
+                                <li class="mb-3">
+                                    <strong>{{ comment.user.username }}</strong> ({{ comment.created_on|date:"F j, Y, g:i a" }}):
+                                    <p>{{ comment.content }}</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No comments yet. Be the first to comment!</p>
+                    {% endif %}
+                </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-header bg-dark">
+                <h4>Leave a comment!</h4>
+            </div>
+            <div class="card-body bg-dark">
+                {% if user.is_authenticated %}
+                    {% load crispy_forms_tags %}
+                    <form id="commentForm" method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                {% else %}
+                    <p>Please log in to join the discussion!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar-->
+    <div class="col-md-4">
+        <div class="card mb-4">
+            <div class="card-header bg-dark">
+                <h4>Currently Observing:</h4>
+            </div>
+            <div class="card-body bg-dark">
+                <p>Monster: <a href="{% url 'articles:monster_detail' observation.monster.pk %}">{{ observation.monster.name }}</a></p>
+                <p>Observer: {{ observation.observer.username }}</p>
+                <p>Date of Observation: {{ observation.observation_date|date:"F j, Y" }}</p>
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header bg-dark">
+                <h4>Check out other observations!</h4>
+            </div>
+            <div class="card-body bg-dark">
+                {% regroup all_observations by monster as monster_observations %}
+                <div class="accordion" id="observationGroups">
+                    {% for group in monster_observations %}
+                    <div class="accordion-item bg-dark">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button text-white bg-{{ group.grouper.category|lower }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false">
+                                {{ group.grouper.name }} 
+                            </button>
+                        </h2>
+                        <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#observationGroups">
+                            <div class="accordion-body bg-dark">
+                                {% for observe in group.list %}
+                                <div class="mb-2">
+                                    {% if observe.pk == observation.pk %}
+                                        <strong>{{ observe.title }}</strong>
+                                    {% else %}
+                                        <a href="{% url 'articles:observation_detail' observe.slug %}">{{ observe.title }}</a>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
