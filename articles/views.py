@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect #throw an error for user if request isn't valid
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User 
 from django.http import HttpResponse
 from .models import Monster, Observation, Comment
-from .forms import CommentForm
+from .forms import CommentForm, ObservationForm
 from datetime import date
 
 # Create your views here.
@@ -105,3 +106,55 @@ def observation_detail(request, slug):
         form = CommentForm()
 
     return render(request, 'articles/observation_detail.html', {'observation': observation, 'comments': comments, 'all_observations': all_observations, 'form': form,})
+
+@login_required
+def create_observation(request):
+    if request.method == 'POST':
+        form = ObservationForm(request.POST, request.FILES)
+        if form.is_valid():
+            observation = form.save(commit=False)
+            observation.observer = request.user
+
+            if not observation.slug:
+                from django.utils.text import slugify
+                observation.slug = slugify(observation.title)
+                
+            observation.save()
+            messages.success(request, 'Observation created successfully!')
+            return redirect('articles:observation_detail', slug=observation.slug)
+    else:
+        form = ObservationForm()
+    return render(request, 'articles/create_observation.html', {'form': form})
+
+@login_required
+def edit_observation(request, slug):
+    observation= get_object_or_404(Observation, slug=slug)
+    
+    if observation.observer != request.user:
+        return redirect('articles:observation_detail', slug=slug)
+
+    if request.method == 'POST':
+        form = ObservationForm(request.POST, request.FILES, instance=observation)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Observation updated!')
+            return redirect('articles:observation_detail', slug=slug)
+    else:
+        form = ObservationForm(instance=observation)
+        
+    return render(request, 'articles/edit_observation.html', {'form': form, 'observation': observation,})
+
+@login_required
+def delete_observation(request, slug):
+    observation = get_object_or_404(Observation, slug=slug)
+    
+    if observation.observer != request.user:
+        return redirect('articles:observation_detail', slug=slug)
+    
+    if request.method == 'POST':
+        monster_name = observation.monster.name
+        observation.delete()
+        messages.success(request, f'Observation deleted successfully!')
+        return redirect('articles:observation_list')
+    
+    return render(request, 'articles/delete_observation.html', {'observation': observation})

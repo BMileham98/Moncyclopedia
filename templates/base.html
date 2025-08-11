@@ -16,6 +16,9 @@
             <div class="navbar-nav">
                 <a class="nav-link" href="{% url 'articles:monster_list' %}">Monsters</a>
                 <a class="nav-link" href="{% url 'articles:observation_list' %}">Observations</a>
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'articles:create_observation' %}">Add Observation!</a>
+                {% endif %}
             </div>
             <div class="navbar-nav">
                 {% if user.is_authenticated %}

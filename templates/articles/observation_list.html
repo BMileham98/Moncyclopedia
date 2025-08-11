@@ -17,7 +17,11 @@
             <ul class="list-unstyled">
                 {% for observation in monster.observations.all %}
                 <li>
-                    <a href="{% url 'articles:observation_detail' observation.slug %}">{{ observation.title }} - {{ observation.observer.username }}</a>
+                    {% if observation.slug %}
+                        <a href="{% url 'articles:observation_detail' observation.slug %}">{{ observation.title }} - {{ observation.observer.username }}</a>
+                    {% else %}
+                        <span>{{ observation.title }} - {{ observation.observer.username }}</span>
+                    {% endif %}
                 </li>
                 {% endfor %}
             </ul>

@@ -50,7 +50,7 @@ class Observation(models.Model):
 
     monster = models.ForeignKey(Monster, on_delete=models.CASCADE, related_name='observations')
     title= models.CharField(max_length=200)
-    slug= models.SlugField(max_length=200, unique=True)
+    slug= models.SlugField(max_length=200, unique=True, blank=True)
     observer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='observations')
     observation_date = models.DateField()
     location= models.CharField(max_length=255)
@@ -66,6 +66,16 @@ class Observation(models.Model):
 
     def __str__(self):
         return f"Observation of {self.monster.name} by {self.observer.username}"
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+            original_slug = self.slug
+            counter = 1
+            while Observation.objects.filter(slug=self.slug).exclude(pk=self.pk).exists():
+                self.slug = f"{original_slug}-{counter}"
+                counter += 1
+        super().save(*args, **kwargs)
 
 class Comment(models.Model):
     observation = models.ForeignKey(Observation, on_delete=models.CASCADE, related_name='comments', null=True, blank=True)

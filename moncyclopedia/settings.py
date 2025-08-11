@@ -157,8 +157,11 @@ AUTHENTICATION_BACKENDS= [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-ACCOUNT_SIGNUP_FIELDS= ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_SIGNUP_EMAIL_VERIFICATION= 'none'
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION= True
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
+ACCOUNT_SIGNUP_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_REQUIRED = False
 LOGIN_REDIRECT_URL= '/'
 LOGOUT_REDIRECT_URL= '/'
+
+EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend' 

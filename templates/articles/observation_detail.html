@@ -7,14 +7,26 @@
 <div class="row">
     <div class="col-md-8">
         <div class="d-flex align-items-center mb-3">
-            <h1>{{ observation.title }}</h1>
+            <div>
+                <h1>{{ observation.title }}</h1>
+                <p>Created on: {{ observation.created_on|date:"F j, Y" }}</p>
+            </div>
             <span class="badge bg-secondary ms-2">{{ observation.observer.username }}</span>
-            <p>Created on: {{ observation.created_on|date:"F j, Y" }}</p>
         </div>
         {% if observation.image %}
             <img src="{{ observation.image.url }}" alt="{{ observation.title }}" class="img-fluid mb-3">
         {% else %}
             <p>No image available for this observation.</p>
+        {% endif %}
+        {% if user.is_authenticated and user == observation.observer %}
+        <div class="mb-3">
+            <a href="{% url 'articles:edit_observation' observation.slug %}" class="btn btn-warning btn-sm">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="{% url 'articles:delete_observation' observation.slug %}" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i> Delete
+            </a>
+        </div>
         {% endif %}
         <div class="card mb-4">
             <div class="card-header bg-dark">
@@ -24,15 +36,15 @@
                 <p><strong>Monster:</strong> <a href="{% url 'articles:monster_detail' observation.monster.pk %}">{{ observation.monster.name }}</a></p>
                 <p><strong>Date:</strong> {{ observation.observation_date|date:"F j, Y" }}</p>
                 <p><strong>Location:</strong> {{ observation.location }}</p>
-                <p><strong>Danger Rating</strong> {{observation.danger_rating }}</p>
+                <p><strong>Danger :</strong> {{observation.danger_rating }}</p>
             </div>
         </div>
         <h2>Observed Behaviour</h2>
-        <p>{{ observation.observed_behaviour }}</p>
+        <div>{{ observation.observed_behaviour|safe }}</div>
         <h2>Additional Notes</h2>
-        <p>{{ observation.notes }}</p>
+        <div>{{ observation.additional_notes|safe }}</div>
         <h3>Danger Evaluation</h3>
-        <p><strong>{{ observation.danger_evaluation }}:</strong> {{ observation.expanded_danger_rating }}</p>
+        <div><strong>{{ observation.danger_rating }}:</strong> {{ observation.expanded_danger_rating }}</div>
         <div class="card mt-4">
                 <div class="card-header bg-dark">
                     <h3>Comments: {{comments.count}}</h3>
@@ -43,6 +55,10 @@
                             {% for comment in comments %}
                                 <li class="mb-3">
                                     <strong>{{ comment.user.username }}</strong> ({{ comment.created_on|date:"F j, Y, g:i a" }}):
+                                    {% if user == comment.user %}
+                                        <a href="#" class="btn btn-sm btn-outline-warning ms-2">Edit</a>
+                                        <a href="#" class="btn btn-sm btn-outline-danger">Delete</a>
+                                    {% endif %}
                                     <p>{{ comment.content }}</p>
                                 </li>
                             {% endfor %}
@@ -99,13 +115,17 @@
                         <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#observationGroups">
                             <div class="accordion-body bg-dark">
                                 {% for observe in group.list %}
-                                <div class="mb-2">
-                                    {% if observe.pk == observation.pk %}
-                                        <strong>{{ observe.title }}</strong>
-                                    {% else %}
-                                        <a href="{% url 'articles:observation_detail' observe.slug %}">{{ observe.title }}</a>
-                                    {% endif %}
-                                </div>
+                                    <div class="mb-2">
+                                        {% if observe.pk == observation.pk %}
+                                            <strong>{{ observe.title }}</strong>
+                                        {% else %}
+                                            {% if observe.slug %}
+                                                <a href="{% url 'articles:observation_detail' observe.slug %}">{{ observe.title }}</a>
+                                            {% else %}
+                                                {{ observe.title }} <small class="text-muted">(no link)</small>
+                                            {% endif %}
+                                        {% endif %}
+                                    </div>
                                 {% endfor %}
                             </div>
                         </div>

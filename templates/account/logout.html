@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Logout - Moncyclopedia{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-dark">
+                    <h2 class="text-center mb-0">Logout</h2>
+                </div>
+                <div class="card-body bg-dark text-center">
+                    <p>Are you sure you want to logout?</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Yes, Logout</button>
+                        <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
