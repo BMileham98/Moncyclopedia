@@ -14,7 +14,7 @@
             <span class="badge bg-secondary ms-2">{{ observation.observer.username }}</span>
         </div>
         {% if observation.image %}
-            <img src="{{ observation.image.url }}" alt="{{ observation.title }}" class="img-fluid mb-3">
+            <img src="{{ observation.image.url }}" alt="{{ observation.title }}" class="monster-image-observe mb-3">
         {% else %}
             <p>No image available for this observation.</p>
         {% endif %}
