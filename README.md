@@ -101,11 +101,15 @@ Additionally, there are layout changes that could improve the experience. Though
 
 ## Testing
 
-### Lighthouse
 
-### HTML / CSS Validation
+HTML Validation shows no errors besides an issue rendering the monster_detail.html where it adds an additional set of paragraph tags to the description. This issue is not visible on the site itself, however. I believe this may be caused by extra tags being stored in the database, as there's only one set of paragraph tags in the template. 
 
-### Python Validation
+![HTML error](static/images/readme/HTML%20error.png)
+![HTML error screenshot](static/images/readme/HTML%20error%20line.png)
+
+CSS Validation is clear! No errors found.
+![CSS validation](static/images/readme/CSS%20validation.png)
+
 
 ## Credits
 
