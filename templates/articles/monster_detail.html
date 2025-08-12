@@ -16,7 +16,7 @@
         <p>No image available.</p>
         {% endif %}
 
-        <div class="card mb-4">
+        <div class="card mb-4 border-{{ monster.category|lower }}">
             <div class="card-header bg-{{ monster.category|lower }}">
                 <h2>About {{ monster.name }}</h2>
             </div>

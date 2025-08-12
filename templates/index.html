@@ -17,7 +17,7 @@
         <h3>{{ featured_monster.name }}</h3>
         <p><strong>Category:</strong> {{ featured_monster.category }}</p>
         <p>{{ featured_monster.description|truncatewords:50 }}</p>
-        <a href="{% url 'articles:monster_detail' featured_monster.pk %}" class="btn bg-{{ featured_monster.category|lower }}">Find out more!</a>
+        <a href="{% url 'articles:monster_detail' featured_monster.pk %}" class="btn bg-{{ featured_monster.category|lower }} text-white">Find out more!</a>
     </div>
 </div>
 {% endif %}

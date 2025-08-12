@@ -108,12 +108,12 @@
                     {% for group in monster_observations %}
                     <div class="accordion-item bg-dark">
                         <h2 class="accordion-header">
-                            <button class="accordion-button text-white bg-{{ group.grouper.category|lower }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false">
+                            <button class="accordion-button text-white bg-dark border-{{ group.grouper.category|lower }}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false">
                                 {{ group.grouper.name }} 
                             </button>
                         </h2>
                         <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#observationGroups">
-                            <div class="accordion-body bg-dark">
+                            <div class="accordion-body bg-dark text-white border-{{ group.grouper.category|lower }}">
                                 {% for observe in group.list %}
                                     <div class="mb-2">
                                         {% if observe.pk == observation.pk %}

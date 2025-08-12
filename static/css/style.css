@@ -2,7 +2,7 @@
     --chaos-color: midnightblue;
     --holy-color: gold;
     --marine-color: turquoise;
-    --nature-color: springgreen;
+    --nature-color: forestgreen;
     --aeries-color: skyblue;
     --pyro-color: red;
     --twilight-color: rebeccapurple;
@@ -43,3 +43,38 @@ a:hover, a:focus, a:active, .navbar-color .nav-link:hover {
 .bg-pyro {background-color: var(--pyro-color);}
 
 .bg-twilight {background-color: var(--twilight-color);}
+
+/* Elemental border */
+
+.border-chaos {border: 4px solid var(--chaos-color) !important;}
+
+.border-holy {border: 2px solid var(--holy-color);}
+
+.border-marine {border: 2px solid var(--marine-color);}
+
+.border-nature {border: 2px solid var(--nature-color);}
+
+.border-aeries {border: 2px solid var(--aeries-color);}
+
+.border-pyro {border: 2px solid var(--pyro-color);}
+
+.border-twilight {border: 2px solid var(--twilight-color);}
+
+
+/* Footer styling */
+footer {
+    margin-top: auto; /* Push footer to bottom */
+}
+
+footer a:hover {
+    color: var(--bs-primary) !important;
+    text-decoration: underline;
+}
+
+
+/* Make sure body takes full height */
+html, body {
+    height: 100%;
+}
+
+.container-fluid, main
