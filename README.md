@@ -101,6 +101,12 @@ Additionally, there are layout changes that could improve the experience. Though
 
 ## Testing
 
+### Performance and Validation
+
+![Lighthouse scoring](static/images/readme/Lighthouse%20scores.png)
+
+Lighthouse performance tests were run while using Microsoft Edge's InPrivate mode after initially encountering lag caused by extensions.The tests consistently ranked high for Accessibility, Best Practices and SEO, however the performance originally floated around 90 in these runs even with disabled extensions. 
+Through scanning the feedback I found that my Kaspersky antivirus' script injection was causing delays of up to 1600ms. Therefore by disabling it, I found my score increased. I imagine this new score will more accurately reflect the site's performance. 
 
 HTML Validation shows no errors besides an issue rendering the monster_detail.html where it adds an additional set of paragraph tags to the description. This issue is not visible on the site itself, however. I believe this may be caused by extra tags being stored in the database, as there's only one set of paragraph tags in the template. 
 
@@ -111,11 +117,23 @@ CSS Validation is clear! No errors found.
 ![CSS validation](static/images/readme/CSS%20validation.png)
 
 
+### Optimisation
+
+Over the course of developing this site, I encountered and patched many issues in-between commits. A lot of these were regarding styling, especially when it came to responsiveness. 
+
+For example, I found that my navigation bar often needed tweaks to look right in both mobile and desktop forms. This was especially clear on mobile when the navbar was initially a large block of links in the header. This made the site look overcrowded even before viewing the content. 
+To fix this, I implemented a toggle that hid the links on smaller screens and allowed for a more visually pleasant experience. This was done using bootstrap properties such as 'data-bs-toggle'. 
+Additionally, classes such as 'ms-auto' and 'me-auto' were used to organise the nav-items for a less cluttered layout. 
+
+Additionally, the images used in the project were of different sizes, requiring a uniform styling rule for consistency in accordance to the acceptance criteria of the user-story 'Monster Listings'. 
+As img-fluid did not correctly resize the images, two classes were created - 'monster-image-contain' for the monster listings and 'monster-image-observe' for the observation pages. This allowed me to have consistency with the images while also accommodating for the different layouts. 
+
 ## Credits
 
 First, Code Institute is to be credited for teaching me how to use the Django framework and improving my knowledge of the HTML, CSS and Python languages. 
 
 Bootstrap was used as a base for many parts of the site, such as the navbar and building the structure of the monster entry page. 
+
 The concept of the site was inspired by Wiki sites, such as Bulbapedia and those hosted by Fandom.
 
 W3Schools was referenced, especially in finding the correct colours for the layout.
