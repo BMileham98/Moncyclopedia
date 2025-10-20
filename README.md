@@ -93,7 +93,7 @@ The site allows users not only to comment on monsters and the site owner's findi
 
 There is a fair amount of features I would like to add or refine to this project, in order to both make the site more polished and allow for further collaboration. 
 
-The comments allow for image submission, however it is not currently regulated. I hope to enable approval on a conditional basis to both curate images and allow a steady flow of discussion. 
+Image submission for comments is only partially implemented, the form for users fails to show a submission field and there is no code to display such an image, although it is accommodated for in the Comment model. Through the admin panel, it can be seen that images are correctly uploaded to Cloudinary. I hope to be able to fully implement this as well as selective comment moderation.
 
 There is not currently a page to allow users to submit their own monsters, this is something I would also implement with further time. The model for monsters has been built around this however, with the categories being coded to accept only the 7 categories I have decided so that functionality such as filtering would not break. 
 
